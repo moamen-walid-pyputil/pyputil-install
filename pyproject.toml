@@ -1,0 +1,118 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyputil_install"
+version = "0.1.0"
+description = "Python Package Utilities Installer - Toolchain, Python, and Package Management Suite"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "PyPUtil Contributors"}
+]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: System :: Software Distribution",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    # No required external dependencies - all core functionality uses Python standard library
+]
+
+[project.optional-dependencies]
+# aiohttp is used by compiler_installer/downloader.py for async HTTP downloads
+# and by urls/validation.py for HEAD requests and checksum validation
+# The code falls back gracefully when aiohttp is not installed
+aiohttp = ["aiohttp>=3.8.0"]
+
+# colorama is used by cli/formatters.py for ANSI color output on Windows
+# The code checks availability before using colors
+color = ["colorama>=0.4.6"]
+
+# packaging is used by package_installer/ and pip_installer/versions.py
+# for version comparison and parsing (PEP 440)
+# The code includes a fallback implementation when not available
+packaging = ["packaging>=23.0"]
+
+# All optional dependencies
+all = [
+    "aiohttp>=3.8.0",
+    "colorama>=0.4.6",
+    "packaging>=23.0",
+]
+
+# Development dependencies for contributors
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-asyncio>=0.21",
+    "black>=23.0",
+    "isort>=5.12",
+    "mypy>=1.0",
+    "ruff>=0.1",
+    "build>=0.10",
+    "twine>=4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/moamen-walid-pyputil/pyputil-install"
+Repository = "https://github.com/moamen-walid-pyputil/pyputil-install"
+Documentation = "https://github.com/moamen-walid-pyputil/pyputil-install"
+Issues = "https://github.com/moamen-walid-pyputil/pyputil-install/issues"
+
+[project.scripts]
+# From auto_installer - async/sync auto-installer (no CLI entry yet)
+# From stdlib_installer/cli.py - main entry point
+stdlib-installer = "pyputil_install.stdlib_installer.cli:main"
+
+# From python_installer/cli.py - main entry point
+python-installer = "pyputil_install.python_installer.cli:main"
+
+# From pyheaders_installer/cli.py - main entry point
+headers-installer = "pyputil_install.pyheaders_installer.cli:main"
+
+# From package_installer/cli/main.py - main entry point
+package-installer = "pyputil_install.package_installer.cli.main:main"
+
+# From pip_installer/main.py - main entry point
+pip-installer = "pyputil_install.pip_installer.main:main"
+
+# From compiler_installer/__init__.py - no CLI entry exported yet
+
+[project.entry-points."console_scripts"]
+# Aliases for the main CLI (from package_installer)
+# The main CLI is located at package_installer/cli/main.py
+pt = "pyputil_install.package_installer.cli.main:main"
+pyputil = "pyputil_install.package_installer.cli.main:main"
+
+[project.gui-scripts]
+# No GUI scripts defined
+
+[tool.setuptools]
+packages = {find = {where = [""], namespaces = false}}
+include-package-data = true
+
+[tool.setuptools.package-data]
+pyputil_install = [
+    "py.typed",
+    "**/get-pip.py",
+    "**/*.json",
+    "**/environments/*.json",
+]
+
+[tool.setuptools.exclude-package-data]
+pyputil_install = ["tests/*", "*/__pycache__/*", "*.pyc"]
